@@ -71,6 +71,8 @@ if (BUILD_FRAMEWORK)
   set (BUILD_SHARED_LIBS OFF)
 endif ()
 
+option(HB_INSTALL "Install applications and library" OFF)
+
 include_directories(AFTER
   ${PROJECT_SOURCE_DIR}/src
   ${PROJECT_BINARY_DIR}/src
@@ -905,12 +907,13 @@ macro ( make_pkgconfig_pc_file name )
   string(REPLACE "%libs_private%" "${PC_LIBS_PRIV}" FSTR ${FSTR})
 
   file(WRITE "${PROJECT_BINARY_DIR}/${name}.pc" ${FSTR})
-
-  install(
-    FILES "${PROJECT_BINARY_DIR}/${name}.pc"
-    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
-    COMPONENT pkgconfig
-  )
+	IF(HB_INSTALL)
+	  install(
+		FILES "${PROJECT_BINARY_DIR}/${name}.pc"
+		DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
+		COMPONENT pkgconfig
+	  )
+	endif()
 endmacro ( make_pkgconfig_pc_file )
 
 # Generate hb-features.h with the features we enabled
@@ -928,14 +931,17 @@ macro (make_hb_features_h)
   endforeach()
   file(WRITE "${PROJECT_BINARY_DIR}/src/hb-features.h" ${feature_h_in})
   if (NOT SKIP_INSTALL_HEADERS AND NOT SKIP_INSTALL_ALL)
-    install(
-      FILES "${PROJECT_BINARY_DIR}/src/hb-features.h"
-      DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/harfbuzz"
-    )
+	  IF(HB_INSTALL)
+		install(
+		  FILES "${PROJECT_BINARY_DIR}/src/hb-features.h"
+		  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/harfbuzz"
+		)
+	  endif()
   endif()
 endmacro (make_hb_features_h)
 
 if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
+IF(HB_INSTALL)
   install(TARGETS harfbuzz
     EXPORT harfbuzzConfig
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -1033,4 +1039,5 @@ if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
     endif ()
   endif ()
   make_hb_features_h()
+endif()
 endif ()
