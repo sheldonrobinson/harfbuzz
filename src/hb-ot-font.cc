@@ -35,9 +35,6 @@
 #include "hb-machinery.hh"
 #include "hb-ot-face.hh"
 
-#ifndef HB_NO_VAR_HVF
-#include "hb-aat-var-hvgl-table.hh"
-#endif
 #include "hb-ot-cmap-table.hh"
 #include "hb-ot-glyf-table.hh"
 #include "hb-ot-var-gvar-table.hh"
@@ -524,8 +521,7 @@ hb_ot_get_glyph_v_advances (hb_font_t* font, void* font_data,
   {
     hb_font_extents_t font_extents;
     font->get_h_extents_with_fallback (&font_extents);
-    hb_position_t advance = font_extents.ascender - font_extents.descender;
-    advance = font->em_scale_y (- (int) advance);
+    hb_position_t advance = font_extents.descender - font_extents.ascender;
     for (unsigned int i = 0; i < count; i++)
     {
       *first_advance = advance;
@@ -823,9 +819,6 @@ hb_ot_get_glyph_extents (hb_font_t *font,
 #ifndef HB_NO_VAR_COMPOSITES
   if (ot_face->VARC->get_extents (font, glyph, extents)) return true;
 #endif
-#ifndef HB_NO_VAR_HVF
-  if (ot_face->hvgl->get_extents (font, glyph, extents)) return true;
-#endif
   if (ot_face->glyf->get_extents (font, glyph, extents)) return true;
 #ifndef HB_NO_OT_FONT_CFF
   if (ot_face->cff2->get_extents (font, glyph, extents)) return true;
@@ -917,9 +910,6 @@ hb_ot_draw_glyph_or_fail (hb_font_t *font,
   if (font->face->table.VARC->get_path (font, glyph, draw_session)) { ret = true; goto done; }
 #endif
   // Keep the following in synch with VARC::get_path_at()
-#ifndef HB_NO_VAR_HVF
-  if (font->face->table.hvgl->get_path (font, glyph, draw_session)) { ret = true; goto done; }
-#endif
   if (font->face->table.glyf->get_path (font, glyph, draw_session, gvar_cache)) { ret = true; goto done; }
 
 #ifndef HB_NO_CFF

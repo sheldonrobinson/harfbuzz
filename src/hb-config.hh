@@ -38,6 +38,7 @@
 #ifndef HB_EXPERIMENTAL_API
 #define HB_NO_BEYOND_64K
 #define HB_NO_CUBIC_GLYF
+#define HB_NO_VAR_COMPOSITES
 #endif
 
 #ifdef HB_TINY
@@ -111,13 +112,8 @@
 
 /* Closure of options. */
 
-#ifdef HB_NO_SIMD
-#define HB_NO_APPLE_SIMD
-#endif
-
 #ifdef HB_NO_VAR
 #define HB_NO_VAR_COMPOSITES
-#define HB_NO_VAR_HVF
 #endif
 
 #ifdef HB_DISABLE_DEPRECATED
@@ -187,7 +183,6 @@
 #endif
 
 #ifdef HB_OPTIMIZE_SIZE_MORE
-#define HB_NO_SIMD
 #define HB_NO_OT_RULESETS_FAST_PATH
 #endif
 

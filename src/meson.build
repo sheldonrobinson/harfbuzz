@@ -23,8 +23,6 @@ hb_base_sources = files(
   'hb-aat-ltag-table.hh',
   'hb-aat-map.cc',
   'hb-aat-map.hh',
-  'hb-aat-var-hvgl-table.cc',
-  'hb-aat-var-hvgl-table.hh',
   'hb-algs.hh',
   'hb-array.hh',
   'hb-atomic.hh',
@@ -1101,6 +1099,14 @@ if get_option('tests').enabled()
       suite: ['src'],
     )
   endforeach
+
+  test('check-release-notes',
+    find_program('check-release-notes.py'),
+    args: [
+      meson.current_source_dir() / '..' / 'NEWS',
+      meson.project_version()
+    ],
+  )
 endif
 
 install_headers(hb_headers + hb_subset_headers, subdir: meson.project_name())
